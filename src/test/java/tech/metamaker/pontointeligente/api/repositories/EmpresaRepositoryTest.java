@@ -1,10 +1,15 @@
 package tech.metamaker.pontointeligente.api.repositories;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import tech.metamaker.pontointeligente.api.entities.Empresa;
 
@@ -12,7 +17,27 @@ import tech.metamaker.pontointeligente.api.entities.Empresa;
 @SpringBootTest
 @ActiveProfiles("test")
 public interface EmpresaRepositoryTest {
-	
-	@Transactional(readOnly=true)
-	Empresa findByCnpj(String cnpj);
+
+	static final String CNPJ = "70609039334";
+
+	@Autowired private EmpresaRepository empresaRepository;
+
+	@Before
+	public default void setUp() throws Exception{
+		Empresa empresa = new Empresa();
+		empresa.setRazaoSocial("Empresa de exemplo");
+		empresa.setCnpj(CNPJ);
+		this.empresaRepository.save(empresa);
+	}
+
+	@After
+	public default void tearDown() {
+		this.empresaRepository.deleteAll();
+	}
+
+	@Test
+	public default void testBucarPorCnpj() {
+		Empresa empresa = this.empresaRepository.findByCnpj(CNPJ);
+		assertEquals(CNPJ, empresa.getCnpj());
+	}
 }

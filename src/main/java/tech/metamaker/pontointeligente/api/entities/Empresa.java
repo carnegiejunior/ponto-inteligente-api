@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -41,5 +43,18 @@ public class Empresa implements Serializable {
 
 	@OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Funcionario> funcionarios;
+	
+	
+	@PreUpdate
+	public void preUpdate() {
+		this.dataAtualizacao = new Date();
+	}
+
+	@PrePersist
+	public void prePersist() {
+		final Date dataAtual = new Date();
+		this.dataAtualizacao = dataAtual;
+		this.dataCriacao = dataAtual;
+	}
 
 }

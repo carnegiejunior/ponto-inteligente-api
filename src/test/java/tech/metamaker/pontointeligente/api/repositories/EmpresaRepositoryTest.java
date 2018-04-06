@@ -16,14 +16,15 @@ import tech.metamaker.pontointeligente.api.entities.Empresa;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public interface EmpresaRepositoryTest {
+public class EmpresaRepositoryTest {
 
 	static final String CNPJ = "70609039334";
 
-	@Autowired private EmpresaRepository empresaRepository;
+	@Autowired 
+	private EmpresaRepository empresaRepository;
 
 	@Before
-	public default void setUp() throws Exception{
+	public void setUp() throws Exception{
 		Empresa empresa = new Empresa();
 		empresa.setRazaoSocial("Empresa de exemplo");
 		empresa.setCnpj(CNPJ);
@@ -31,12 +32,12 @@ public interface EmpresaRepositoryTest {
 	}
 
 	@After
-	public default void tearDown() {
+	public void tearDown() {
 		this.empresaRepository.deleteAll();
 	}
 
 	@Test
-	public default void testBucarPorCnpj() {
+	public void testBucarPorCnpj() {
 		Empresa empresa = this.empresaRepository.findByCnpj(CNPJ);
 		assertEquals(CNPJ, empresa.getCnpj());
 	}
